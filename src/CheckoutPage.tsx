@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { translations } from './translations';
 import { CheckCircle2, ChevronDown, ShieldCheck } from 'lucide-react';
+import { trackPurchase } from './lib/metaPixel';
 
 interface CheckoutPageProps {
   onBack: () => void;
@@ -70,6 +71,7 @@ export default function CheckoutPage({ onBack, t, lang }: CheckoutPageProps) {
 
         setCurrentOrderId(generatedId);
         setIsSuccess(true);
+        trackPurchase(generatedId, 999, 'EGP');
       } catch (error) {
         console.error('Submission error:', error);
         alert(t.networkError);

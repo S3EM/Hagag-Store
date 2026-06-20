@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { HashRouter as Router, Routes, Route, useNavigate, Navigate } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route, useNavigate, Navigate, useLocation } from 'react-router-dom';
 import { translations } from './translations';
+import ErrorBoundary from './components/ErrorBoundary';
+import { initMetaPixel, trackViewContent, trackInitiateCheckout } from './lib/metaPixel';
 
 const AdminDashboard = React.lazy(() => import('./AdminDashboard'));
 const CheckoutPage = React.lazy(() => import('./CheckoutPage'));
@@ -30,6 +32,10 @@ interface LandingPageProps {
 
 function LandingPage({ t, lang, setLang, darkMode, setDarkMode }: LandingPageProps) {
   const navigate = useNavigate();
+
+  React.useEffect(() => {
+    trackViewContent();
+  }, []);
 
   const handleToggleLang = React.useCallback(() => {
     setLang(prev => prev === 'ar' ? 'en' : 'ar');
@@ -129,6 +135,11 @@ function AdminPageWrapper() {
 
 function CheckoutPageWrapper({ t, lang }: { t: typeof translations.ar; lang: 'ar' | 'en' }) {
   const navigate = useNavigate();
+
+  React.useEffect(() => {
+    trackInitiateCheckout();
+  }, []);
+
   return (
     <React.Suspense fallback={<LoadingScreen />}>
       <CheckoutPage onBack={() => navigate('/')} t={t} lang={lang} />
@@ -136,13 +147,82 @@ function CheckoutPageWrapper({ t, lang }: { t: typeof translations.ar; lang: 'ar
   );
 }
 
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+
+    // Update Canonical URL
+    let link = document.querySelector('link[rel="canonical"]') as HTMLLinkElement;
+    if (!link) {
+      link = document.createElement('link');
+      link.setAttribute('rel', 'canonical');
+      document.head.appendChild(link);
+    }
+    link.setAttribute('href', window.location.href);
+  }, [pathname]);
+
+  return null;
+}
+
 export default function App() {
-  const [lang, setLang] = useState<'ar' | 'en'>('ar');
-  const [darkMode, setDarkMode] = useState(true);
+  const [lang, setLang] = useState<'ar' | 'en'>(() => {
+    const savedLang = localStorage.getItem('lang');
+    return (savedLang === 'ar' || savedLang === 'en') ? savedLang : 'ar';
+  });
+  const [darkMode, setDarkMode] = useState<boolean>(() => {
+    const savedMode = localStorage.getItem('darkMode');
+    return savedMode !== null ? savedMode === 'true' : true;
+  });
+
+  React.useEffect(() => {
+    initMetaPixel();
+  }, []);
 
   React.useEffect(() => {
     document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
     document.documentElement.lang = lang;
+    localStorage.setItem('lang', lang);
+
+    // Dynamic SEO Metadata
+    const isAr = lang === 'ar';
+    const seoTitle = isAr 
+      ? 'جهاز الحجامة الذكي المتكامل | راحة فورية لآلام الظهر والعضلات' 
+      : 'Smart Integrated Cupping Device | Instant Relief for Back & Muscle Pain';
+    const seoDesc = isAr
+      ? 'تخلص من آلام الظهر وشد العضلات في 10 دقائق فقط مع جهاز الحجامة الذكي المتطور ذو تقنية الضوء الأحمر والتحكم الذكي بالحرارة والشفط لراحة تامة وأمنة لجميع أفراد العائلة.'
+      : 'Relieve back pain and muscle tension in just 10 minutes with our advanced smart cupping therapy device. Built-in red light technology, smart temperature control, and adjustable suction for safe, comprehensive relief for the whole family.';
+
+    document.title = seoTitle;
+
+    // Helper to select or create meta tags
+    const updateMeta = (selector: string, attr: string, value: string) => {
+      let element = document.querySelector(selector);
+      if (!element) {
+        element = document.createElement('meta');
+        const parts = selector.split('[');
+        if (parts.length > 1) {
+          const match = parts[1].match(/([a-zA-Z:-]+)=["']?([^"']+)["']?/);
+          if (match) {
+            element.setAttribute(match[1], match[2]);
+          }
+        }
+        document.head.appendChild(element);
+      }
+      element.setAttribute(attr, value);
+    };
+
+    const ogImgUrl = window.location.origin + '/packgrowend.webp';
+    updateMeta('meta[name="description"]', 'content', seoDesc);
+    updateMeta('meta[property="og:title"]', 'content', seoTitle);
+    updateMeta('meta[property="og:description"]', 'content', seoDesc);
+    updateMeta('meta[property="og:image"]', 'content', ogImgUrl);
+    updateMeta('meta[property="og:image:type"]', 'content', 'image/webp');
+    updateMeta('meta[property="og:locale"]', 'content', isAr ? 'ar_AR' : 'en_US');
+    updateMeta('meta[property="og:site_name"]', 'content', isAr ? 'سيم S3EM' : 'S3EM');
+    updateMeta('meta[name="twitter:card"]', 'content', 'summary_large_image');
+    updateMeta('meta[name="twitter:image"]', 'content', ogImgUrl);
   }, [lang]);
 
   React.useEffect(() => {
@@ -157,45 +237,53 @@ export default function App() {
 
   React.useEffect(() => {
     if (darkMode) {
+      document.documentElement.classList.add('dark', 'bg-slate-900', 'text-white');
+      document.documentElement.classList.remove('bg-slate-50', 'text-slate-900');
       document.body.classList.add('bg-slate-900', 'text-white');
       document.body.classList.remove('bg-slate-50', 'text-slate-900');
     } else {
+      document.documentElement.classList.add('bg-slate-50', 'text-slate-900');
+      document.documentElement.classList.remove('dark', 'bg-slate-900', 'text-white');
       document.body.classList.add('bg-slate-50', 'text-slate-900');
       document.body.classList.remove('bg-slate-900', 'text-white');
     }
+    localStorage.setItem('darkMode', String(darkMode));
   }, [darkMode]);
 
   const t = translations[lang];
 
   return (
-    <Router>
-      <Routes>
-        <Route 
-          path="/" 
-          element={
-            <LandingPage 
-              t={t} 
-              lang={lang} 
-              setLang={setLang} 
-              darkMode={darkMode} 
-              setDarkMode={setDarkMode} 
-            />
-          } 
-        />
-        <Route 
-          path="/admin-secret" 
-          element={
-            <AdminPageWrapper />
-          } 
-        />
-        <Route 
-          path="/checkout" 
-          element={
-            <CheckoutPageWrapper t={t} lang={lang} />
-          } 
-        />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </Router>
+    <ErrorBoundary>
+      <Router>
+        <ScrollToTop />
+        <Routes>
+          <Route 
+            path="/" 
+            element={
+              <LandingPage 
+                t={t} 
+                lang={lang} 
+                setLang={setLang} 
+                darkMode={darkMode} 
+                setDarkMode={setDarkMode} 
+              />
+            } 
+          />
+          <Route 
+            path="/admin-secret" 
+            element={
+              <AdminPageWrapper />
+            } 
+          />
+          <Route 
+            path="/checkout" 
+            element={
+              <CheckoutPageWrapper t={t} lang={lang} />
+            } 
+          />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Router>
+    </ErrorBoundary>
   );
 }
