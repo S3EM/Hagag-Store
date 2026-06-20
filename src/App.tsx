@@ -30,6 +30,7 @@ function ProblemImage({ src, alt }: { src: string; alt: string }) {
       onTouchEnd={() => setIsActive(false)}
       onTouchCancel={() => setIsActive(false)}
       className={`aspect-[3/4] rounded-lg overflow-hidden border border-zinc-800 transition-all duration-300 relative cursor-pointer ${isActive ? 'grayscale-0 ring-1 ring-red-500' : 'grayscale'}`}
+      style={{ aspectRatio: '3 / 4' }}
     >
       <img 
         src={src} 
@@ -39,6 +40,7 @@ function ProblemImage({ src, alt }: { src: string; alt: string }) {
         loading="lazy"
         sizes="(max-width: 448px) 33vw, 140px"
         className={`w-full h-full object-cover transition-opacity duration-300 ${isActive ? 'opacity-100' : 'opacity-60'}`} 
+        style={{ aspectRatio: '3 / 4' }}
       />
     </div>
   );
@@ -143,16 +145,16 @@ export default function App() {
       <main className={`max-w-md mx-auto pb-20 pt-16 ${darkMode ? 'bg-slate-900' : 'bg-slate-50'}`}>
         
         {/* HERO SECTION */}
-        <section className="relative px-4 py-12 flex flex-col items-center text-center overflow-hidden">
+        <section className="hero-section relative px-4 py-12 flex flex-col items-center text-center overflow-hidden">
           {/* Background Glow */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150%] h-[150%] bg-red-900/20 blur-[100px] pointer-events-none rounded-full" />
           
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="z-10 bg-zinc-900/60 border border-zinc-800 rounded-2xl p-4 mb-8 shadow-2xl backdrop-blur-sm"
+            className="hero-card z-10 bg-zinc-900/60 border border-zinc-800 rounded-2xl p-4 mb-8 shadow-2xl backdrop-blur-sm"
           >
-            <h1 className="text-3xl font-black text-white leading-tight mb-4">
+            <h1 className="hero-title text-3xl font-black text-white leading-tight mb-4">
               {t.heroTitle1} <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-red-600">{t.heroTitle2}</span>
             </h1>
@@ -165,7 +167,7 @@ export default function App() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
-            className="relative w-full h-72 rounded-2xl overflow-hidden shadow-[0_0_40px_rgba(220,38,38,0.3)] border border-red-500/20"
+            className="hero-image-container relative w-full h-72 rounded-2xl overflow-hidden shadow-[0_0_40px_rgba(220,38,38,0.3)] border border-red-500/20"
           >
             <img 
               src="/packgrowend.webp" 
@@ -175,6 +177,7 @@ export default function App() {
               fetchPriority="high"
               sizes="(max-width: 448px) 100vw, 448px"
               className="w-full h-full object-cover"
+              style={{ aspectRatio: '448 / 288' }}
             />
             {/* Overlay Gradient */}
             <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-transparent" />
@@ -439,7 +442,16 @@ export default function App() {
           </div>
 
           <div className="flex flex-col gap-6 mt-10 w-full overflow-hidden">
-            <img src="/rrrr.webp" alt="Specs" width={448} height={288} loading="lazy" sizes="(max-width: 448px) 100vw, 448px" className="rounded-2xl object-contain w-full h-auto bg-zinc-50 border border-zinc-100 shadow-sm" />
+            <img 
+              src="/rrrr.webp" 
+              alt="Specs" 
+              width={448} 
+              height={288} 
+              loading="lazy" 
+              sizes="(max-width: 448px) 100vw, 448px" 
+              className="rounded-2xl object-contain w-full h-auto bg-zinc-50 border border-zinc-100 shadow-sm" 
+              style={{ aspectRatio: '448 / 288' }}
+            />
           </div>
         </section>
 
