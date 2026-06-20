@@ -205,7 +205,16 @@ export default function App() {
         {/* SOLUTION SECTION */}
         <section className="flex flex-col bg-zinc-950 border-y border-zinc-800 relative z-10">
           <div className="relative w-full h-[400px]">
-            <img src="/solution.webp" alt="Solution" width={448} height={400} loading="lazy" sizes="(max-width: 448px) 100vw, 448px" className="w-full h-full object-cover object-center opacity-80" />
+            <img 
+              src="/solution.webp" 
+              alt="Solution" 
+              width={448} 
+              height={400} 
+              loading="lazy" 
+              sizes="(max-width: 448px) 100vw, 448px" 
+              className="w-full h-full object-cover object-center opacity-80" 
+              style={{ aspectRatio: '448 / 400' }}
+            />
             <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-zinc-950 via-zinc-950/60 to-transparent h-48" />
             <div className="absolute inset-x-0 top-0 bg-gradient-to-b from-zinc-950/60 via-transparent to-transparent h-24" />
           </div>
@@ -248,6 +257,7 @@ export default function App() {
                     loading="lazy" 
                     sizes="64px" 
                     className="w-full h-full object-cover rounded-full" 
+                    style={{ aspectRatio: '1 / 1' }}
                   />
                 </div>
                 <div className="absolute inset-0 bg-red-500/20 blur-md rounded-full -z-10" />
@@ -272,6 +282,7 @@ export default function App() {
                     loading="lazy" 
                     sizes="64px" 
                     className="w-full h-full object-cover rounded-full" 
+                    style={{ aspectRatio: '1 / 1' }}
                   />
                 </div>
                 <div className="absolute inset-0 bg-red-500/20 blur-md rounded-full -z-10" />
@@ -296,6 +307,7 @@ export default function App() {
                     loading="lazy" 
                     sizes="64px" 
                     className="w-full h-full object-cover rounded-full" 
+                    style={{ aspectRatio: '1 / 1' }}
                   />
                 </div>
                 <div className="absolute inset-0 bg-red-500/20 blur-md rounded-full -z-10" />
@@ -321,6 +333,7 @@ export default function App() {
               loading="lazy"
               sizes="(max-width: 448px) 100vw, 448px"
               className="w-full h-full object-cover object-center opacity-90"
+              style={{ aspectRatio: '448 / 500' }}
             />
             {/* Gradients to blend with page */}
             <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-zinc-950 via-zinc-950/80 to-transparent h-48" />
@@ -359,7 +372,16 @@ export default function App() {
                     </svg>
                     
                     <div className="relative z-10 w-16 h-16 rounded-full overflow-hidden border-2 border-red-500 bg-zinc-900 shadow-lg">
-                      <img src="/one.webp" alt="Device" width={64} height={64} loading="lazy" sizes="64px" className="w-full h-full object-cover" />
+                      <img 
+                        src="/one.webp" 
+                        alt="Device" 
+                        width={64} 
+                        height={64} 
+                        loading="lazy" 
+                        sizes="64px" 
+                        className="w-full h-full object-cover" 
+                        style={{ aspectRatio: '1 / 1' }}
+                      />
                     </div>
                  </div>
 
