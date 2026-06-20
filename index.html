@@ -6,7 +6,23 @@
     <title>جهاز الحجامة الذكي | راحة فورية لآلام الظهر</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+    <!-- Preload the Tajawal font CSS style sheet -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" />
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet" />
+    <!-- Inline Critical CSS for above-the-fold content -->
+    <style>
+      body {
+        background-color: #09090b !important;
+        color: #ffffff !important;
+        font-family: 'Tajawal', sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+      #root {
+        min-height: 100vh;
+        background-color: #09090b;
+      }
+    </style>
   </head>
   <body class="bg-zinc-950 text-white font-tajawal overflow-x-hidden antialiased">
     <div id="root"></div>

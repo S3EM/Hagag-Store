@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { translations } from './translations';
-import AdminDashboard from './AdminDashboard';
+const AdminDashboard = React.lazy(() => import('./AdminDashboard'));
 import {
   Battery,
   Wind,
@@ -33,9 +33,10 @@ function ProblemImage({ src, alt }: { src: string; alt: string }) {
       <img 
         src={src} 
         alt={alt} 
-        width={280}
-        height={373}
+        width={140}
+        height={186}
         loading="lazy"
+        sizes="(max-width: 448px) 33vw, 140px"
         className={`w-full h-full object-cover transition-opacity duration-300 ${isActive ? 'opacity-100' : 'opacity-60'}`} 
       />
     </div>
@@ -311,11 +312,20 @@ export default function App() {
   const t = translations[lang];
 
   if (currentPath === '#/admin-secret' || currentPath === '/admin-secret') {
-    return <AdminDashboard onLogout={() => {
-      window.history.pushState({}, '', '/');
-      window.location.hash = '';
-      setCurrentPath('/');
-    }} />;
+    return (
+      <React.Suspense fallback={
+        <div className="min-h-screen bg-slate-950 text-white flex flex-col items-center justify-center gap-3">
+          <div className="w-8 h-8 rounded-full border-2 border-red-500 border-t-transparent animate-spin" />
+          <p className="text-zinc-400 text-sm font-medium">جاري التحميل...</p>
+        </div>
+      }>
+        <AdminDashboard onLogout={() => {
+          window.history.pushState({}, '', '/');
+          window.location.hash = '';
+          setCurrentPath('/');
+        }} />
+      </React.Suspense>
+    );
   }
 
   if (isCheckout) {
@@ -388,6 +398,7 @@ export default function App() {
               width={448}
               height={288}
               fetchPriority="high"
+              sizes="(max-width: 448px) 100vw, 448px"
               className="w-full h-full object-cover"
             />
             {/* Overlay Gradient */}
@@ -416,7 +427,7 @@ export default function App() {
         {/* SOLUTION SECTION */}
         <section className="flex flex-col bg-zinc-950 border-y border-zinc-800 relative z-10">
           <div className="relative w-full h-[400px]">
-            <img src="/solution.webp" alt="Solution" width={448} height={400} loading="lazy" className="w-full h-full object-cover object-center opacity-80" />
+            <img src="/solution.webp" alt="Solution" width={448} height={400} loading="lazy" sizes="(max-width: 448px) 100vw, 448px" className="w-full h-full object-cover object-center opacity-80" />
             <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-zinc-950 via-zinc-950/60 to-transparent h-48" />
             <div className="absolute inset-x-0 top-0 bg-gradient-to-b from-zinc-950/60 via-transparent to-transparent h-24" />
           </div>
@@ -450,7 +461,16 @@ export default function App() {
             <div className="flex items-center gap-4 bg-black/40 p-4 rounded-2xl border border-zinc-800 backdrop-blur-sm">
               <div className="relative shrink-0">
                 <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-red-500 p-0.5 relative z-10">
-                  <img src="https://images.unsplash.com/photo-1588534827557-0477123bc65b?w=200&q=80" alt="Child" className="w-full h-full object-cover rounded-full" />
+                  <img 
+                    src="https://images.unsplash.com/photo-1588534827557-0477123bc65b?w=200&q=80" 
+                    srcset="https://images.unsplash.com/photo-1588534827557-0477123bc65b?w=64&q=80 64w, https://images.unsplash.com/photo-1588534827557-0477123bc65b?w=128&q=80 128w, https://images.unsplash.com/photo-1588534827557-0477123bc65b?w=200&q=80 200w"
+                    alt="Child" 
+                    width={64} 
+                    height={64} 
+                    loading="lazy" 
+                    sizes="64px" 
+                    className="w-full h-full object-cover rounded-full" 
+                  />
                 </div>
                 <div className="absolute inset-0 bg-red-500/20 blur-md rounded-full -z-10" />
               </div>
@@ -465,7 +485,16 @@ export default function App() {
             <div className={`flex items-center gap-4 bg-black/40 p-4 rounded-2xl border border-zinc-800 backdrop-blur-sm flex-row-reverse text-left ${lang === 'en' ? 'mr-4' : 'ml-4'}`}>
               <div className="relative shrink-0">
                 <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-red-500 p-0.5 relative z-10">
-                  <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=200&q=80" alt="Athlete" className="w-full h-full object-cover rounded-full" />
+                  <img 
+                    src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=200&q=80" 
+                    srcset="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=64&q=80 64w, https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=128&q=80 128w, https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=200&q=80 200w"
+                    alt="Athlete" 
+                    width={64} 
+                    height={64} 
+                    loading="lazy" 
+                    sizes="64px" 
+                    className="w-full h-full object-cover rounded-full" 
+                  />
                 </div>
                 <div className="absolute inset-0 bg-red-500/20 blur-md rounded-full -z-10" />
               </div>
@@ -480,7 +509,16 @@ export default function App() {
             <div className="flex items-center gap-4 bg-black/40 p-4 rounded-2xl border border-zinc-800 backdrop-blur-sm">
               <div className="relative shrink-0">
                 <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-red-500 p-0.5 relative z-10">
-                  <img src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=200&q=80" alt="Elder" className="w-full h-full object-cover rounded-full" />
+                  <img 
+                    src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=200&q=80" 
+                    srcset="https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=64&q=80 64w, https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=128&q=80 128w, https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=200&q=80 200w"
+                    alt="Elder" 
+                    width={64} 
+                    height={64} 
+                    loading="lazy" 
+                    sizes="64px" 
+                    className="w-full h-full object-cover rounded-full" 
+                  />
                 </div>
                 <div className="absolute inset-0 bg-red-500/20 blur-md rounded-full -z-10" />
               </div>
@@ -503,6 +541,7 @@ export default function App() {
               width={448}
               height={500}
               loading="lazy"
+              sizes="(max-width: 448px) 100vw, 448px"
               className="w-full h-full object-cover object-center opacity-90"
             />
             {/* Gradients to blend with page */}
@@ -542,7 +581,7 @@ export default function App() {
                     </svg>
                     
                     <div className="relative z-10 w-16 h-16 rounded-full overflow-hidden border-2 border-red-500 bg-zinc-900 shadow-lg">
-                      <img src="/one.webp" alt="Device" className="w-full h-full object-cover" />
+                      <img src="/one.webp" alt="Device" width={64} height={64} loading="lazy" sizes="64px" className="w-full h-full object-cover" />
                     </div>
                  </div>
 
@@ -625,7 +664,7 @@ export default function App() {
           </div>
 
           <div className="flex flex-col gap-6 mt-10 w-full overflow-hidden">
-            <img src="/rrrr.webp" alt="Specs" width={448} height={288} loading="lazy" className="rounded-2xl object-contain w-full h-auto bg-zinc-50 border border-zinc-100 shadow-sm" />
+            <img src="/rrrr.webp" alt="Specs" width={448} height={288} loading="lazy" sizes="(max-width: 448px) 100vw, 448px" className="rounded-2xl object-contain w-full h-auto bg-zinc-50 border border-zinc-100 shadow-sm" />
           </div>
         </section>
 
@@ -667,6 +706,7 @@ export default function App() {
               width={448}
               height={400}
               loading="lazy"
+              sizes="(max-width: 448px) 100vw, 448px"
               className="w-full h-full object-cover object-center opacity-90 rounded-t-[2.5rem]"
             />
             <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-zinc-950 via-zinc-950/80 to-transparent h-32" />
@@ -718,3 +758,4 @@ export default function App() {
     </div>
   );
 }
+
