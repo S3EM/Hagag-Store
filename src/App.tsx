@@ -625,7 +625,7 @@ export default function App() {
           </div>
 
           <div className="flex flex-col gap-6 mt-10 w-full overflow-hidden">
-            <img src="/spec2.png" alt="Specs" className="rounded-2xl object-contain w-full h-auto bg-zinc-50 border border-zinc-100 shadow-sm" />
+            <img src="/rrrr.webp" alt="Specs" width={448} height={288} loading="lazy" className="rounded-2xl object-contain w-full h-auto bg-zinc-50 border border-zinc-100 shadow-sm" />
           </div>
         </section>
 
@@ -659,12 +659,15 @@ export default function App() {
         </section>
 
         {/* CTA FOOTER */}
-        <section className="bg-zinc-950 border-t border-zinc-800 relative pb-env-bottom flex flex-col">
-          <div className="relative w-full h-[400px]">
+        <section className="bg-zinc-950 rounded-t-[2.5rem] overflow-hidden relative pb-env-bottom flex flex-col -mt-8 border-t border-zinc-850 shadow-[0_-12px_40px_rgba(0,0,0,0.3)]">
+          <div className="relative w-full h-[400px] overflow-hidden rounded-t-[2.5rem]">
             <img 
               src="/photo4.webp" 
               alt="CTA" 
-              className="w-full h-full object-cover object-center opacity-90"
+              width={448}
+              height={400}
+              loading="lazy"
+              className="w-full h-full object-cover object-center opacity-90 rounded-t-[2.5rem]"
             />
             <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-zinc-950 via-zinc-950/80 to-transparent h-32" />
             <div className="absolute inset-x-0 top-0 bg-gradient-to-b from-zinc-950/50 via-transparent to-transparent h-16" />
@@ -715,4 +718,3 @@ export default function App() {
     </div>
   );
 }
-
