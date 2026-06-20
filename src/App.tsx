@@ -150,6 +150,12 @@ export default function App() {
     const permanentClasses = ['font-tajawal', 'overflow-x-hidden', 'antialiased'];
     permanentClasses.forEach(cls => document.body.classList.add(cls));
 
+    return () => {
+      permanentClasses.forEach(cls => document.body.classList.remove(cls));
+    };
+  }, []);
+
+  React.useEffect(() => {
     if (darkMode) {
       document.body.classList.add('bg-slate-900', 'text-white');
       document.body.classList.remove('bg-slate-50', 'text-slate-900');

@@ -11,7 +11,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 
-const ADMIN_PASSWORD = "admin"; // Simple password protection
+const ADMIN_PASSWORD = (import.meta as any).env.VITE_ADMIN_PASSWORD || "admin123"; // Password secure fallback or customizable via environment variables
 const SCRIPT_URL =
   "https://script.google.com/macros/s/AKfycbwMwoEOrZ1SagOwOojfTqL0DPQN0yObc3Ai4dN-wmfDxwkt6S_ftq8JBxG6P9Nhb3xv2g/exec";
 
@@ -27,7 +27,9 @@ export default function AdminDashboard({
 }: {
   onLogout?: () => void;
 }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    return sessionStorage.getItem("admin_authenticated") === "true";
+  });
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState("");
 
@@ -90,6 +92,7 @@ export default function AdminDashboard({
     e.preventDefault();
     if (password === ADMIN_PASSWORD) {
       setIsAuthenticated(true);
+      sessionStorage.setItem("admin_authenticated", "true");
       setLoginError("");
     } else {
       setLoginError("كلمة المرور غير صحيحة");
@@ -181,6 +184,7 @@ export default function AdminDashboard({
               if (onLogout) onLogout();
               setIsAuthenticated(false);
               setPassword("");
+              sessionStorage.removeItem("admin_authenticated");
             }}
             className="flex items-center gap-2 text-sm font-medium text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-lg transition-colors border border-slate-700 hover:border-slate-600"
           >
