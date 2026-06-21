@@ -112,3 +112,25 @@ export const trackPurchase = (orderId: string, value = 999, currency = 'EGP', pr
     console.log('📢 [Meta Pixel Debug] Purchase captured:', eventData);
   }
 };
+
+/**
+ * Track when a user submits details (considered a hot lead in sales funnel)
+ */
+export const trackLead = (productName = 'جهاز الحجامة الذكي المتكامل', value = 999, currency = 'EGP') => {
+  if (typeof window === 'undefined') return;
+
+  const eventData = {
+    content_name: productName,
+    content_category: 'Cupping Device',
+    value: value,
+    currency: currency,
+  };
+
+  if (window.fbq) {
+    window.fbq('track', 'Lead', eventData);
+    console.log('🔥 [Meta Pixel Event] Lead sent:', eventData);
+  } else {
+    console.log('📢 [Meta Pixel Debug] Lead captured:', eventData);
+  }
+};
+

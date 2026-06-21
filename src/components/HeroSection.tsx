@@ -30,20 +30,19 @@ const HeroSection = React.memo(function HeroSection({ t }: HeroSectionProps) {
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.2 }}
-        className="hero-image-container relative w-full h-72 rounded-2xl overflow-hidden shadow-[0_0_40px_rgba(220,38,38,0.3)] border border-red-500/20"
+        className="hero-image-container relative w-full max-w-[360px] aspect-[3/4] mx-auto rounded-3xl overflow-hidden shadow-[0_0_40px_rgba(220,38,38,0.3)] border border-red-500/20 bg-zinc-950 flex items-center justify-center"
       >
-        <img 
-          src="/packgrowend.webp" 
-          alt="Hero" 
-          width={448}
-          height={288}
-          fetchPriority="high"
-          sizes="(max-width: 448px) 100vw, 448px"
-          className="w-full h-full object-cover"
-          style={{ aspectRatio: '448 / 288' }}
+        <video 
+          src="/product-demo.mp4" 
+          autoPlay 
+          loop 
+          muted 
+          playsInline 
+          preload="none"
+          className="w-full h-full object-cover rounded-3xl"
         />
         {/* Overlay Gradient */}
-        <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-transparent pointer-events-none" />
       </motion.div>
     </section>
   );

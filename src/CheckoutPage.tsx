@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { translations } from './translations';
 import { CheckCircle2, ChevronDown, ShieldCheck } from 'lucide-react';
-import { trackPurchase } from './lib/metaPixel';
+import { trackPurchase, trackLead, trackInitiateCheckout } from './lib/metaPixel';
 
 interface CheckoutPageProps {
   onBack: () => void;
@@ -21,6 +21,9 @@ export default function CheckoutPage({ onBack, t, lang }: CheckoutPageProps) {
   const handleSubmit = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     
+    // Track initiate checkout when the user clicks 'Confirm Order'
+    trackInitiateCheckout('جهاز الحجامة الذكي المتكامل', 600, 'EGP');
+    
     let newErrors = { name: '', phone: '', governorate: '', address: '' };
     let isValid = true;
 
@@ -29,8 +32,8 @@ export default function CheckoutPage({ onBack, t, lang }: CheckoutPageProps) {
       isValid = false;
     }
 
-    // Phone validation: starts with 01, followed by 9 digits
-    if (!/^01\d{9}$/.test(formData.phone)) {
+    // Phone validation: Egyptian mobile numbers prefix (010, 011, 012, 015) followed by exactly 8 digits
+    if (!/^01[0125]\d{8}$/.test(formData.phone)) {
       newErrors.phone = t.phoneError;
       isValid = false;
     }
@@ -71,7 +74,8 @@ export default function CheckoutPage({ onBack, t, lang }: CheckoutPageProps) {
 
         setCurrentOrderId(generatedId);
         setIsSuccess(true);
-        trackPurchase(generatedId, 999, 'EGP');
+        trackLead('جهاز الحجامة الذكي المتكامل', 600, 'EGP');
+        trackPurchase(generatedId, 600, 'EGP');
       } catch (error) {
         console.error('Submission error:', error);
         alert(t.networkError);
@@ -160,11 +164,14 @@ export default function CheckoutPage({ onBack, t, lang }: CheckoutPageProps) {
               <input 
                 type="tel" 
                 value={formData.phone}
-                onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                onChange={(e) => {
+                  const val = e.target.value.replace(/\D/g, ''); // restrict input to numbers only
+                  setFormData({...formData, phone: val});
+                }}
                 disabled={isLoading}
-                className={`w-full bg-slate-800 border ${errors.phone ? 'border-red-500' : 'border-slate-700'} rounded-xl px-4 py-3 text-white text-right focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition-all placeholder:text-slate-500 disabled:opacity-50`} 
+                className={`w-full bg-slate-800 border ${errors.phone ? 'border-red-500' : 'border-slate-700'} rounded-xl px-4 py-3 text-white focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition-all placeholder:text-slate-500 disabled:opacity-50`} 
                 placeholder={t.phonePlaceholder} 
-                dir="ltr" 
+                style={{ direction: 'ltr', textAlign: lang === 'ar' ? 'right' : 'left' }}
               />
               {errors.phone && <p className="text-red-400 text-xs mt-1.5 text-right">{errors.phone}</p>}
             </div>

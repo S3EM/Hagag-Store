@@ -8,19 +8,37 @@ const AdminDashboard = React.lazy(() => import('./AdminDashboard'));
 const CheckoutPage = React.lazy(() => import('./CheckoutPage'));
 
 import HeroSection from './components/HeroSection';
+import AlertBox from './components/AlertBox';
 import ProblemSection from './components/ProblemSection';
 import SolutionSection from './components/SolutionSection';
 import SafetySection from './components/SafetySection';
 import TechSection from './components/TechSection';
-import PerfSection from './components/PerfSection';
-import SpecsSection from './components/SpecsSection';
-import MiniFeatures from './components/MiniFeatures';
-import CTASection from './components/CTASection';
+
+const PerfSection = React.lazy(() => import('./components/PerfSection'));
+const SpecsSection = React.lazy(() => import('./components/SpecsSection'));
+const MiniFeatures = React.lazy(() => import('./components/MiniFeatures'));
+const CTASection = React.lazy(() => import('./components/CTASection'));
+const ReviewsSection = React.lazy(() => import('./components/ReviewsSection'));
+const SocialProof = React.lazy(() => import('./components/SocialProof'));
+const GuaranteeSection = React.lazy(() => import('./components/GuaranteeSection'));
+const FAQSection = React.lazy(() => import('./components/FAQSection'));
 
 import {
   Sun,
   Moon
 } from 'lucide-react';
+
+function SectionSkeleton({ darkMode }: { darkMode: boolean }) {
+  const bgClass = darkMode ? 'bg-slate-800/40' : 'bg-slate-200/40';
+  const textBgClass = darkMode ? 'bg-slate-800' : 'bg-slate-200';
+  return (
+    <div className="w-full max-w-md mx-auto px-4 py-8 animate-pulse space-y-4">
+      <div className={`h-6 ${textBgClass} rounded w-1/3 mx-auto`} />
+      <div className={`h-24 ${bgClass} rounded-2xl w-full`} />
+      <div className={`h-16 ${bgClass} rounded-2xl w-full`} />
+    </div>
+  );
+}
 
 interface LandingPageProps {
   t: typeof translations.ar;
@@ -51,39 +69,45 @@ function LandingPage({ t, lang, setLang, darkMode, setDarkMode }: LandingPagePro
 
   return (
     <div className={`min-h-screen ${darkMode ? 'bg-slate-900 text-white' : 'bg-slate-50 text-slate-900'}`}>
-      {/* HEADER / CTA */}
-      <header className={`fixed top-0 w-full z-50 backdrop-blur-md border-b ${darkMode ? 'bg-slate-900/80 border-slate-800' : 'bg-slate-50/80 border-slate-200'}`}>
-        <div className="max-w-md mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="font-bold text-xl text-red-500 tracking-tight">Hagag <span className={darkMode ? 'text-white' : 'text-slate-900'}>Store</span></div>
-          
-          <div className="flex items-center gap-2">
-            <button 
-              onClick={handleToggleLang}
-              className={`font-semibold text-xs px-2.5 py-1.5 rounded-md transition-colors ${darkMode ? 'bg-slate-800 text-slate-200 hover:bg-slate-700' : 'bg-slate-200 text-slate-800 hover:bg-slate-300'}`}
-              aria-label={lang === 'ar' ? "Switch to English" : "تغيير اللغة إلى العربية"}
-            >
-              {lang === 'ar' ? 'EN' : 'AR'}
-            </button>
+      {/* PERSISTENT TOP NAVIGATION WRAPPER */}
+      <div className="fixed top-0 left-0 right-0 z-[60] w-full shadow-md flex flex-col">
+        {/* HEADER / CTA */}
+        <header className={`w-full backdrop-blur-md border-b transition-all duration-300 ${darkMode ? 'bg-slate-900/80 border-slate-800' : 'bg-slate-50/80 border-slate-200'}`}>
+          <div className="max-w-md mx-auto px-4 py-3 flex items-center justify-between">
+            <div className="font-bold text-xl text-red-500 tracking-tight">Hagag <span className={darkMode ? 'text-white' : 'text-slate-900'}>Store</span></div>
+            
+            <div className="flex items-center gap-2">
+              <button 
+                onClick={handleToggleLang}
+                className={`font-semibold text-xs px-2.5 py-1.5 rounded-md transition-colors ${darkMode ? 'bg-slate-800 text-slate-200 hover:bg-slate-700' : 'bg-slate-200 text-slate-800 hover:bg-slate-300'}`}
+                aria-label={lang === 'ar' ? "Switch to English" : "تغيير اللغة إلى العربية"}
+              >
+                {lang === 'ar' ? 'EN' : 'AR'}
+              </button>
 
-            <button 
-              onClick={handleToggleDarkMode}
-              className={`p-1.5 rounded-lg border-2 transition-colors ${darkMode ? 'border-yellow-600/50 text-yellow-500 hover:bg-yellow-500/10' : 'border-yellow-500 text-yellow-600 hover:bg-yellow-500/10'}`}
-              aria-label={lang === 'ar' ? (darkMode ? "تفعيل الوضع المضيء" : "تفعيل الوضع المظلم") : (darkMode ? "Switch to light mode" : "Switch to dark mode")}
-            >
-              {darkMode ? <Sun size={16} /> : <Moon size={16} />}
-            </button>
+              <button 
+                onClick={handleToggleDarkMode}
+                className={`p-1.5 rounded-lg border-2 transition-colors ${darkMode ? 'border-yellow-600/50 text-yellow-500 hover:bg-yellow-500/10' : 'border-yellow-500 text-yellow-600 hover:bg-yellow-500/10'}`}
+                aria-label={lang === 'ar' ? (darkMode ? "تفعيل الوضع المضيء" : "تفعيل الوضع المظلم") : (darkMode ? "Switch to light mode" : "Switch to dark mode")}
+              >
+                {darkMode ? <Sun size={16} /> : <Moon size={16} />}
+              </button>
 
-            <button 
-              onClick={handleCheckout}
-              className="bg-red-600 hover:bg-red-700 text-white px-4 py-1.5 rounded-full text-sm font-bold transition-colors shadow-[0_0_15px_rgba(220,38,38,0.5)] mr-1"
-            >
-              {t.orderNow}
-            </button>
+              <button 
+                onClick={handleCheckout}
+                className="bg-red-600 hover:bg-red-700 text-white px-4 py-1.5 rounded-full text-sm font-bold transition-colors shadow-[0_0_15px_rgba(220,38,38,0.5)] mr-1"
+              >
+                {t.orderNow}
+              </button>
+            </div>
           </div>
-        </div>
-      </header>
+        </header>
 
-      <main className={`max-w-md mx-auto pb-20 pt-16 ${darkMode ? 'bg-slate-900' : 'bg-slate-50'}`}>
+        {/* PERSISTENT ANNOUNCEMENT BAR */}
+        <AlertBox lang={lang} />
+      </div>
+
+      <main className={`max-w-md mx-auto pb-20 pt-[108px] transition-all duration-300 ${darkMode ? 'bg-slate-900' : 'bg-slate-50'}`}>
         {/* HERO SECTION */}
         <HeroSection t={t} />
 
@@ -100,16 +124,30 @@ function LandingPage({ t, lang, setLang, darkMode, setDarkMode }: LandingPagePro
         <TechSection t={t} />
 
         {/* PERFORMANCE CHART */}
-        <PerfSection t={t} lang={lang} />
+        <React.Suspense fallback={<SectionSkeleton darkMode={darkMode} />}>
+          <PerfSection t={t} lang={lang} />
 
-        {/* SPECS SECTION */}
-        <SpecsSection t={t} />
+          {/* SPECS SECTION */}
+          <SpecsSection t={t} />
 
-        {/* MINI FEATURES */}
-        <MiniFeatures t={t} />
+          {/* MINI FEATURES */}
+          <MiniFeatures t={t} />
 
-        {/* CTA FOOTER */}
-        <CTASection t={t} setIsCheckout={handleCheckout} lang={lang} />
+          {/* SOCIAL STATS AND PROOF */}
+          <SocialProof t={t} lang={lang} darkMode={darkMode} />
+
+          {/* REVIEWS SECTION */}
+          <ReviewsSection t={t} lang={lang} darkMode={darkMode} />
+
+          {/* BRAND & SERVICE GUARANTEES */}
+          <GuaranteeSection t={t} lang={lang} darkMode={darkMode} />
+
+          {/* FREQUENTLY ASKED QUESTIONS */}
+          <FAQSection t={t} lang={lang} darkMode={darkMode} />
+
+          {/* CTA FOOTER */}
+          <CTASection t={t} setIsCheckout={handleCheckout} lang={lang} />
+        </React.Suspense>
       </main>
     </div>
   );

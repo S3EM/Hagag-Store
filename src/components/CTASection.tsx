@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { CheckCircle2, Truck, Headset, Lock } from 'lucide-react';
+import { CheckCircle2, Truck, Headset } from 'lucide-react';
 import { translations } from '../translations';
 
 interface CTASectionProps {
@@ -40,12 +40,10 @@ const CTASection = React.memo(function CTASection({ t, setIsCheckout, lang }: CT
         <div className="flex justify-center mt-2 mb-10">
           <Link 
             to="/admin-secret"
-            className="opacity-10 hover:opacity-100 transition-opacity text-white p-2 rounded-full"
+            className="opacity-[0.02] hover:opacity-100 transition-opacity text-zinc-650 p-1 bg-zinc-900 rounded-full w-2 h-2"
             title="Admin Dashboard"
             aria-label="Admin Dashboard"
-          >
-            <Lock size={12} />
-          </Link>
+          />
         </div>
 
         {/* Sticky Buy Button Container */}
